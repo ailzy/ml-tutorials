@@ -124,7 +124,7 @@ FVBs是一系列DeepMind生成模型的基础，例如WaveNet。WaveNet能够生
 
 变分自编码Variational AutoEncoder使用近似推断技术，VAE构建的生成模型具有如下示意图：
 
-**IMAGE3.2.2**
+**IMAGE3.3.1**
 
 VAE选择多元高斯分布作为输出概率，生成变量 $$x$$ 具有概率密度：
 
@@ -140,18 +140,28 @@ $$
 $$
 \prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta) = \int \prod_{i=1}^{m}p_{model}(x^{(i)}\ | z\ ;\theta)p(z)dz
 $$
+
+
 这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 $$z$$ 看作是和 $$x$$ 绑定的不完全观察变量。但事实上，由于$$f(z;\theta)$$是深度生成神经网络，后验概率密度函数 $$P_{posterior}(z|{\bf{x}}))$$ 则很难以某种形式给出。一种 “近似推断” 的方法叫 “变分贝叶斯Variational Bayes”，它构造$$z$$ 的一个近似的参数化分布$$Q$$ 作为 $$z$$ 的后验分布近似。
 
 我们记$$P_{model}({\bf{x}})=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta)$$还有 $$P_{model}({\bf{x}}\ |z)=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ z; \theta)$$ ，则有似然
+
+
 $$
 P_{model}({\bf{x}}) = \int P_{model}({\bf{x}}\ |z)p(z)dz
 $$
+
+
 似然函数满足下述等式：
+
+
 $$
 logP_{model}({\bf{x}}) - D_{KL}(Q(z|{\bf{x}})\|P_{posterior}(z|{\bf{x}})) = E_{z\sim Q}[logP_{model}({\bf{x}}|z)] - D_{KL}(Q(z|{\bf{x}})\|p_{prior}
 (z))
 $$
-式子的右边是 $$log$$ 似然的下界：
+
+
+式子的右边是 $$log$$ 似然的下界。从变分EM角度，E-step 则是对 $$z$$ 求期望（用分布Q的参数替换下界中的 $$z$$ 变量），M-step 则是让下界最大化（Q与P分块坐标上升）。
 
 
 
@@ -169,9 +179,6 @@ $$
 
 
 
-
-
-
-
-
+  
+ 
 
