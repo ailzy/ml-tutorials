@@ -1,3 +1,4 @@
-# My Awesome Book
+# Machine Learning Tutorials \(Chinese\)
 
-This file file serves as your book's preface, a great place to describe your book's content and ideas.
+In this repository, we provide some tutorials of popular machine learning algorithms.
+
