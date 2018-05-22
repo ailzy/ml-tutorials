@@ -135,13 +135,9 @@ $$
 
 
 其中生成函数 $$f(z;\theta)$$ 确定了$$x$$ 的均值，$$\sigma$$ 是超参数确定了一个对角协方差矩阵。通过积分掉 $$z$$，推断其中的参数 $$\theta$$ 来最大化似然
-
-
 $$
 p_{model}(x;\theta) = \int p(x|z;\theta)p(z)dz
 $$
-
-
 这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 z 看作是和 x 绑定的不完全观察变量。但事实上，由于![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_9-24-36.png?version=1&modificationDate=1526520280348&cacheVersion=1&api=v2&width=48&height=24)是深度生成神经网络，后验概率密度函数则很难以某种形式给出。一种 “Approximate近似推断” 的EM方法叫 “变分贝叶斯Variational Bayes”，它构造 z 的一个近似的参数化分布Q，得到最大化似然的近似下界（等式右边）:
 
 ![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_15-50-9.png?version=1&modificationDate=1526543413588&cacheVersion=1&api=v2&width=728&height=63)
