@@ -49,15 +49,25 @@
 **IMAGE2.1.1**
 
 回顾最大似然估计，它定义一个由参数 $$\theta$$ 确定的概率密度函数，对于一个包含m个样本的训练数据集，我们有似然函数$$\prod_{i=1}^{m} p_{model}(x^{(i)};\theta)$$ , 最大似然准则是找到参数 $$\theta$$ 使似然函数最大化。为了避免数值下溢，我们通常转换成$$log\ sum$$的形式：
+
+
 $$
 \theta^{*}=argmax_{\theta} \prod_{i=1}^{m} p_{model}(x^{(i)};\theta)
 =argmax_{\theta} log\prod_{i=1}^{m} p_{model}=argmax_{\theta}\sum_{i=1}^{m}log\ p_{model}(x^{(i)};\theta)
 $$
+
+
 如果我们知道样本分布 $$p_{model}$$ 的具体形式，最小化“样本分布 $$p_{data}$$”与“模型分布 $$p_{model}$$”之间的KL损失，就可以得到一个近似分布$$p_{model}$$，写成表达式如下：
+
+
 $$
 \theta^{*}=argmin_{\theta}D_{KL}(p_{data}(x)\|p_{model}(x;\theta))
 $$
+
+
 在实践中，我们无法获得 $$p_{data}$$的具体形式，只能观察到m个经验样本。如果$$p_{data}$$被替换为m个点构成的经验分布，即每经验样本点的概率密度为$$\frac{1}{m}$$而其他点为0，则最小化KL散度等价于最大似然估计。
+
+
 $$
 \theta^{*}=argmax_{\theta}\mathbb{E}_{x\sim p_{data}}log\ p_{model}(x;\theta)
 $$
@@ -82,20 +92,28 @@ $$
 ### （3.1）非线性独立主成分NICA
 
 非线性独立主成分Nonlinear independent components analysis NIC 做明确定义的“连续”和“非线性”变换，如果已知隐变量$$z$$ 的概率分布，对于一个”连续、可微、可逆“的变换 $$g$$，$$x$$ 由 $$g(z)$$ 生成，那么生成变量 $$x$$ 有如下的概率密度表达式：
+
+
 $$
 p_x(x) = p_z(g^{-1}(x))\left|\det(\frac{\partial g^{-1}(x)}{\partial x})\right|
 $$
+
+
 从上面的式子中观察，如果密度函数 $$p_{z}$$ 是“可直接优化的Tractable”，并且 $$g$$ 逆变换的 $$Jacobian$$ 行列式是“可直接优化的Tractable”，那么密度函数 $$p_{x}$$ 也是Tractable的。换句话说，如果 $$g$$ 变换被精心设计，那么即便 $$z$$ 的分布相对简单，也会让生成变量 $$x$$ 具有一个相对复杂的分布。
 
 非线性ICA模型的主要缺陷是它对 $$g$$ 的选择做了限制，比如其中的 $$z$$ 必须和 $$x$$ 具有相同的维度，以满足$$g$$ 的可逆性。如果要求变换 $$g$$ 的限制较少，比如允许 $$z$$ 有比 $$x$$ 更多的维度，由于 $$p_{model}$$ 无法明确表示则为“隐式模型”，参考GANs。
 
 ### （3.2）完全观察置信网FVBs
 
-完全观察置信网Fully visible belief networks FVBs 是一类模型用链式概率法则分解一个n维向量 $$x$$ 的密度到一个一维概率密度乘机的形式：
+完全观察置信网Fully visible belief networks FVBs 是一类模型用链式概率法则分解一个n维向量 $$x$$ 的密度到一个一维概率密度乘机的形式：
+
+
 $$
 p_{model}({x}) = \prod_{i=1}^{n} (
 {x}^{<i>}|{x}^{<1>},...,{x}^{<i-1>})
 $$
+
+
 FVBs是一系列DeepMind生成模型的基础，例如WaveNet。WaveNet能够生成真实的人类语音，它的缺陷在于一次只能生成一个样本，首先是$$x^{<1>}$$，下一个是$$x^{<2>}$$，时间复杂度是$$O(n)$$。WaveNet作为一种现代FVBNs变种，每一个 $${x}^{<i>}$$ 的分布都需要一个深度神经网络，因而每一步都需要复杂度较高的计算。此外，这些步骤没有办法并行化，它耗费两分钟的计算来生成一秒钟的音频，因而无法用于交互式对话。GANs被设计并行化地生成所有的$${x}^{<i>}$$，有着更快的解码速度。
 
 **IMAGE3.2.1**
@@ -109,14 +127,22 @@ FVBs是一系列DeepMind生成模型的基础，例如WaveNet。WaveNet能够生
 **IMAGE3.2.2**
 
 VAE选择多元高斯分布作为输出概率，生成变量 $$x$$ 具有概率密度：
+
+
 $$
 p(x|z;\theta)= \mathcal{N}(x|f(z;\theta), \sigma^2*I)
 $$
-其中生成函数 $$f(z;\theta)$$ 确定了$$x$$ 的均值，$$\sigma$$ 是超参数确定了一个对角协方差矩阵。通过积分掉 $$z$$，推断其中的参数 $$\theta$$ 来最大化似然
+
+
+其中生成函数 $$f(z;\theta)$$ 确定了$$x$$ 的均值，$$\sigma$$ 是超参数确定了一个对角协方差矩阵。通过积分掉 $$z$$，推断其中的参数 $$\theta$$ 来最大化似然
+
+
 $$
 p_{model}(x;\theta) = \int p(x|z;\theta)p(z)dz
 $$
-这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 z 看作是和 x 绑定的不完全观察变量。但事实上，由于![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_9-24-36.png?version=1&modificationDate=1526520280348&cacheVersion=1&api=v2&width=48&height=24)是深度生成神经网络，后验概率密度函数则很难以某种形式给出。一种 “Approximate近似推断” 的EM方法叫 “变分贝叶斯Variational Bayes”，它构造 z 的一个近似的参数化分布Q，得到最大化似然的近似下界（等式右边）:
+
+
+这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 z 看作是和 x 绑定的不完全观察变量。但事实上，由于![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_9-24-36.png?version=1&modificationDate=1526520280348&cacheVersion=1&api=v2&width=48&height=24)是深度生成神经网络，后验概率密度函数则很难以某种形式给出。一种 “Approximate近似推断” 的EM方法叫 “变分贝叶斯Variational Bayes”，它构造 z 的一个近似的参数化分布Q，得到最大化似然的近似下界（等式右边）:
 
 ![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_15-50-9.png?version=1&modificationDate=1526543413588&cacheVersion=1&api=v2&width=728&height=63)
 
@@ -150,9 +176,5 @@ X
 
 \)作为协方差的高斯分布
 
-，最大化下界需要同时对 θ和分布Q的参数。VAE的推断过程，将式子中的Q分布视为编码器，P分布视为解码器。
-
-
-
-
+，最大化下界需要同时对 θ和分布Q的参数。VAE的推断过程，将式子中的Q分布视为编码器，P分布视为解码器。
 
