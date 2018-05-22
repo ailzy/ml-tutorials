@@ -52,8 +52,8 @@
 
 
 $$
-\theta^{*}=argmax_{\theta} \prod_{i=1}^{m} p_{model}(x^{(i)};\theta)
-=argmax_{\theta} log\prod_{i=1}^{m} p_{model}=argmax_{\theta}\sum_{i=1}^{m}log\ p_{model}(x^{(i)};\theta)
+\theta^{*}=argmax_{\theta} \prod_{i=1}^{m} p_{model}(x^{(i)}\ |\ \theta)
+=argmax_{\theta} log\prod_{i=1}^{m} p_{model}(x^{(i)}\ |\ \theta)=argmax_{\theta}\sum_{i=1}^{m}log\ p_{model}(x^{(i)}\ |\ \theta)
 $$
 
 
@@ -61,7 +61,7 @@ $$
 
 
 $$
-\theta^{*}=argmin_{\theta}D_{KL}(p_{data}(x)\|p_{model}(x;\theta))
+\theta^{*}=argmin_{\theta}D_{KL}(p_{data}(x)\ \|\ p_{model}(x\ |\ \theta))
 $$
 
 
@@ -69,7 +69,7 @@ $$
 
 
 $$
-\theta^{*}=argmax_{\theta}\mathbb{E}_{x\sim p_{data}}log\ p_{model}(x;\theta)
+\theta^{*}=argmax_{\theta}\mathbb{E}_{x\sim p_{data}}log\ p_{model}(x\ |\ \theta)
 $$
 
 
@@ -138,11 +138,14 @@ $$
 
 
 $$
-p_{model}(x;\theta) = \int p(x\ |\ z;\theta)p(z)dz
+\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta) = \int \prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ z;\theta)p(z)dz
 $$
+我们记$$P_{model}({\bf{x}})=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta)$$，还有
 
+这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 $$z$$ 看作是和 $$x$$ 绑定的不完全观察变量。但事实上，由于$$f(z;\theta)$$是深度生成神经网络，后验概率密度函数则很难以某种形式给出。一种 “近似推断” 的方法叫 “变分贝叶斯Variational Bayes”，它构造$$z$$   
+的一个近似的参数化分布$$Q$$，似然函数得到最大化似然的近似下界:
 
-这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 z 看作是和 x 绑定的不完全观察变量。但事实上，由于![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_9-24-36.png?version=1&modificationDate=1526520280348&cacheVersion=1&api=v2&width=48&height=24)是深度生成神经网络，后验概率密度函数则很难以某种形式给出。一种 “Approximate近似推断” 的EM方法叫 “变分贝叶斯Variational Bayes”，它构造 z 的一个近似的参数化分布Q，得到最大化似然的近似下界（等式右边）:
+$$$$
 
 ![](https://aimind.atlassian.net/wiki/download/thumbnails/12222465/image2018-5-17_15-50-9.png?version=1&modificationDate=1526543413588&cacheVersion=1&api=v2&width=728&height=63)
 
