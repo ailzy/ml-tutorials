@@ -140,19 +140,18 @@ $$
 $$
 \prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta) = \int \prod_{i=1}^{m}p_{model}(x^{(i)}\ | z\ ;\theta)p(z)dz
 $$
-我们记$$P_{model}({\bf{x}})=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta)$$还有 $$P_{model}({\bf{x}}\ |z)=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ z; \theta)$$ ，则有
+这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 $$z$$ 看作是和 $$x$$ 绑定的不完全观察变量。但事实上，由于$$f(z;\theta)$$是深度生成神经网络，后验概率密度函数 $$P_{posterior}(z|{\bf{x}}))$$ 则很难以某种形式给出。一种 “近似推断” 的方法叫 “变分贝叶斯Variational Bayes”，它构造$$z$$ 的一个近似的参数化分布$$Q$$ 作为 $$z$$ 的后验分布近似。
 
-
+我们记$$P_{model}({\bf{x}})=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ \theta)$$还有 $$P_{model}({\bf{x}}\ |z)=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ z; \theta)$$ ，则有似然
 $$
 P_{model}({\bf{x}}) = \int P_{model}({\bf{x}}\ |z)p(z)dz
 $$
-
-
-
-
-这就进入了标准的隐变量模型推断框架，通常使用EM算法，将变量 $$z$$ 看作是和 $$x$$ 绑定的不完全观察变量。但事实上，由于$$f(z;\theta)$$是深度生成神经网络，后验概率密度函数则很难以某种形式给出。一种 “近似推断” 的方法叫 “变分贝叶斯Variational Bayes”，它构造$$z$$ 的一个近似的参数化分布$$Q$$ 作为 $$z$$ 的后验分布近似。
-
-似然函数的近似下界为：
+似然函数满足下述等式：
+$$
+logP_{model}({\bf{x}}) - D_{KL}(Q(z|{\bf{x}})\|P_{posterior}(z|{\bf{x}})) = E_{z\sim Q}[logP_{model}({\bf{x}}|z)] - D_{KL}(Q(z|{\bf{x}})\|p_{prior}
+(z))
+$$
+式子的右边是 $$log$$ 似然的下界：
 
 
 
