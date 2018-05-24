@@ -69,20 +69,10 @@ $$
 log P_{model}(X\ |\ \theta)−D_{KL}\left(Q(z\ |\ X;\phi)\|P_{posterior}(z\ |\ X;\theta)\right)=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
 $$
 
-
-
 $$
 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lower\_bound = E_{z\sim Q}[log P_{model}(X\ |\ z;\theta)]−D_{KL}(Q(z\ |\ X;\phi)\|p_{prior}(z))
 $$
 
 
-式子的右边是 $$log$$ 似然$$log P_{model}(X\ |\ \theta)$$的下界。
-
-变分EM最大化下界的过程，通常有两步：
-
-（1）E-step 对下界展开去掉隐变量 $$z$$，即对包含 $$z$$ 的统计量进行期望替换，只包含 $$\phi$$ 和 $$\theta$$ 的函数。
-
-（2）M-step 让下界最大化，$$\phi$$  与 $$\theta$$  分块坐标上升。
-
-在a
+式子的右边是 $$log$$ 似然$$log P_{model}(X\ |\ \theta)$$的下界，也是VAE的基本原理。在VAE中，我们
 
