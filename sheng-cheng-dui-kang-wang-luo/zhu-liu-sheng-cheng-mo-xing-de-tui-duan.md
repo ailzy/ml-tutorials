@@ -60,13 +60,22 @@ P_{model}(X\ |\ \theta)=∫P_{model}(X\ |\ z;\theta)\ p_{prior}(z)dz
 $$
 
 
-“期望最大化算法Expectation Maximum”是标准的隐变量模型推断方法，将变量$$z$$ 看作是不完全观察变量。这里，由于$$f(z;θ)$$是一个深度生成神经网络，后验概率密度函数$$P_{posterior}(z\ |\ X;\theta) = P_{posterior}(z\ |\ {x_{1},...x_{m}})$$ 的结构很复杂，在VAE中我们构建 $$z$$ 的后验分布近似函数 $$Q(z\ |\ X;\phi) = \mathcal{N}(\phi_{\mu}(X), \phi_{\Sigma}(X))$$ 来进行推断。总得来说，利用概率结构更为简单的分布来近似结构复杂的分布，对似然函数进行EM推断，这种技术叫作“变分贝叶斯方法Variational Bayesian Methods”。
+“期望最大化算法Expectation Maximum”是标准的隐变量模型推断方法，将变量$$z$$ 看作是不完全观察变量。这里，由于$$f(z;θ)$$是一个深度生成神经网络，后验概率密度函数$$P_{posterior}(z\ |\ X;\theta)\propto P_{model}(X\ |\ z;\theta)\ p_{prior}(z)$$ 的结构很复杂，在VAE中我们构建 $$z$$ 的后验分布近似函数 $$Q(z\ |\ X;\phi) = \mathcal{N}(\phi_{\mu}(X), \phi_{\Sigma}(X))$$ 来进行推断。总得来说，利用概率结构更为简单的分布来近似结构复杂的分布，对似然函数进行EM推断，这种技术叫作“变分贝叶斯方法Variational Bayesian Methods”。
 
-上面的似然函数满足下述等式：
+利用$$Jensen$$ 不等式，似然函数满足下述等式：
+$$
+\underbrace{log P_{model}(X\ |\ \theta)}_{upper\_bound}\ \geq\ \underbrace{E_{z\sim Q}[log P_{model}(X\ |\ z;\theta)\ p_{prior}(z)] + \mathbb{H}(Q)}_{lower\_bound}
+$$
+并且满足$$upper\_bound - lower
+\_bound = D_{KL}\left(Q(z\ |\ X;\phi)\|P_{posterior}(z\ |\ X;\theta)\right)$$，即
+
+
 
 
 $$
-log P_{model}(X\ |\ \theta)−D_{KL}\left(Q(z\ |\ X;\phi)\|P_{posterior}(z\ |\ X;\theta)\right)=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+
+
+
 $$
 
 $$
