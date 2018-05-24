@@ -6,7 +6,7 @@
 
 
 $$
-p_x(x)=p_z(g^{−1}(x))\left|det(\frac{∂g^{−1}(x)}{∂x})\right| 
+p_x(x)=p_z(g^{−1}(x))\left|det(\frac{∂g^{−1}(x)}{∂x})\right|
 $$
 
 
@@ -50,10 +50,16 @@ $$
 $$
 ∏_{i=1}^{m}p_{model}(x^{(i)}\ |\ θ)=\int\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ z;θ)\ p_{prior}(z)dz
 $$
+
+
 我们记$$X = \{x^{(1)},...,x^{(n)}\}$$，记$$P_{model}(X\ |\ \theta)=\prod_{i=1}^{m}p_{model}(x^{(i)}\ |\ θ)$$ 和$$P_{model}(X\ |\ z; \theta)=∏_{i=1}^{m}p_{model}(x^{(i)}\ |\ z;θ)$$，则似然表达式变为：
+
+
 $$
 P_{model}(X\ |\ \theta)=∫P_{model}(X\ |\ z;\theta)\ p_{prior}(z)dz
 $$
+
+
 “期望最大化算法Expectation Maximum”是标准的隐变量模型推断方法，将变量$$z$$ 看作是不完全观察变量。这里，由于$$f(z;θ)$$是一个深度生成神经网络，后验概率密度函数$$P_{posterior}(z\ |\ X;\theta) = P_{posterior}(z\ |\ {x_{1},...x_{m}})$$ 的结构很复杂，在VAE中我们构建 $$z$$ 的后验分布近似函数 $$Q(z\ |\ X;\phi) = \mathcal{N}(\phi_{\mu}(X), \phi_{\Sigma}(X))$$ 来进行推断。总得来说，利用概率结构更为简单的分布来近似结构复杂的分布，对似然函数进行EM推断，这种技术叫作“变分贝叶斯方法Variational Bayesian Methods”。
 
 上面的似然函数满足下述等式：
@@ -62,6 +68,8 @@ $$
 $$
 log P_{model}(X\ |\ \theta)−D_{KL}\left(Q(z\ |\ X;\phi)\|P_{posterior}(z\ |\ X;\theta)\right)=\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
 $$
+
+
 
 $$
 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lower\_bound = E_{z\sim Q}[log P_{model}(X\ |\ z;\theta)]−D_{KL}(Q(z\ |\ X;\phi)\|p_{prior}(z))
@@ -76,5 +84,5 @@ $$
 
 （2）M-step 让下界最大化，$$\phi$$  与 $$\theta$$  分块坐标上升。
 
-在
+在a
 
